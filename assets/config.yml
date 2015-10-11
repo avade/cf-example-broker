@@ -1,0 +1,7 @@
+service_broker:
+ max_instances: 5
+ username: user
+ password: password
+service_credentials:
+ username: secret
+ password: service
