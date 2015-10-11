@@ -29,11 +29,11 @@ var _ = Describe("CfExampleBroker", func() {
 	})
 
 	Describe(".Provision", func() {
-		Context("when the passing the username and password", func() {
+		Context("when the correct plan is provided", func() {
 			var (
 				details = brokerapi.ProvisionDetails{
 					ID:               "service-id",
-					PlanID:           "plan-id",
+					PlanID:           "cheap-id",
 					OrganizationGUID: "organization-guid",
 					SpaceGUID:        "space-guid",
 				}
@@ -58,6 +58,10 @@ var _ = Describe("CfExampleBroker", func() {
 
 			It("does not return an error", func() {
 				Expect(err).NotTo(HaveOccurred())
+			})
+
+			It("responds with a 201", func() {
+				Expect(response.StatusCode).To(Equal(http.StatusCreated))
 			})
 		})
 	})

@@ -14,8 +14,12 @@ func (*exampleServiceBroker) Services() []brokerapi.Service {
 	return nil
 }
 
-func (*exampleServiceBroker) Provision(instanceID string, details brokerapi.ProvisionDetails) error {
-	return errors.New("Not supported")
+func (serviceBroker *exampleServiceBroker) Provision(instanceID string, details brokerapi.ProvisionDetails) error {
+	if details.PlanID == serviceBroker.plan().ID {
+		return nil
+	} else {
+		return errors.New("Not supported")
+	}
 }
 
 func (*exampleServiceBroker) Deprovision(instanceID string) error {
@@ -45,4 +49,18 @@ func main() {
 	brokerAPI := brokerapi.New(serviceBroker, logger, credentials)
 	http.Handle("/", brokerAPI)
 	http.ListenAndServe(":3000", nil)
+}
+
+func (serviceBroker *exampleServiceBroker) plan() *brokerapi.ServicePlan {
+	return &brokerapi.ServicePlan{
+		ID:          "cheap-id",
+		Name:        "cheap",
+		Description: "This plan provides a...",
+		Metadata: brokerapi.ServicePlanMetadata{
+			Bullets: []string{
+				"Example CF service",
+			},
+			DisplayName: "Cheap-Plan",
+		},
+	}
 }
