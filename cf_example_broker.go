@@ -18,7 +18,7 @@ func (serviceBroker *exampleServiceBroker) Provision(instanceID string, details 
 	if details.PlanID == serviceBroker.plan().ID {
 		return nil
 	} else {
-		return errors.New("Not supported")
+		return errors.New("plan_id is not valid")
 	}
 }
 
