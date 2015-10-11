@@ -1,0 +1,32 @@
+{
+	"ImportPath": "github.com/avade/cf-example-broker",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "14f550f51af52180c2eefed15e5fd18d63c0a64a"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/onsi/ginkgo",
+			"Comment": "v1.1.0-38-g5ed93e4",
+			"Rev": "5ed93e443a4b7dfe9f5e95ca87e6082e503021d2"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega",
+			"Comment": "v1.0-28-g8adf9e1",
+			"Rev": "8adf9e1730c55cdc590de7d49766cb2acc88d8f2"
+		},
+		{
+			"ImportPath": "github.com/pivotal-cf/brokerapi",
+			"Rev": "9f368e578ab699e755c31980dc86d9fcd6848919"
+		},
+		{
+			"ImportPath": "github.com/pivotal-golang/lager",
+			"Rev": "bb90e0a5276fefdf701cc5f145185bd62184f749"
+		}
+	]
+}

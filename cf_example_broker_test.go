@@ -1,9 +1,15 @@
 package main_test
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
+	"github.com/pivotal-cf/brokerapi"
 )
 
 var _ = Describe("CfExampleBroker", func() {
@@ -12,13 +18,47 @@ var _ = Describe("CfExampleBroker", func() {
 		session *gexec.Session
 	)
 
-	JustBeforeEach(func() {
+	BeforeEach(func() {
 		args := []string{}
-
 		session = execBin(args...)
+		time.Sleep(1 * time.Second)
 	})
 
-	It("exits with a zero exit code", func() {
-		Eventually(session).Should(gexec.Exit(0))
+	AfterEach(func() {
+		session.Kill()
+	})
+
+	Describe(".Provision", func() {
+		Context("when the passing the username and password", func() {
+			var (
+				details = brokerapi.ProvisionDetails{
+					ID:               "service-id",
+					PlanID:           "plan-id",
+					OrganizationGUID: "organization-guid",
+					SpaceGUID:        "space-guid",
+				}
+				response *http.Response
+				err      error
+			)
+
+			BeforeEach(func() {
+				client := &http.Client{}
+				path := "http://localhost:3000/v2/service_instances/123"
+
+				buffer := &bytes.Buffer{}
+				json.NewEncoder(buffer).Encode(details)
+				var request *http.Request
+				request, err = http.NewRequest("PUT", path, buffer)
+				Expect(err).NotTo(HaveOccurred())
+				request.Header.Add("Content-Type", "application/json")
+				request.SetBasicAuth("username", "password")
+
+				response, err = client.Do(request)
+			})
+
+			It("does not return an error", func() {
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
 	})
 })
