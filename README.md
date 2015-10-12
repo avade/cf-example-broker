@@ -32,6 +32,8 @@ go build
 ./cf-example-broker config.yml
 ```
 
+The broker is now running on `http://localhost:3000`
+
 ## Running the tests
 
 
