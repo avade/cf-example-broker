@@ -1,6 +1,8 @@
 package database_test
 
 import (
+	"errors"
+
 	"github.com/avade/cf-example-broker/database"
 
 	. "github.com/onsi/ginkgo"
@@ -30,8 +32,18 @@ var _ = Describe("Database Service", func() {
 	})
 
 	Context("Creating a user for a given database", func() {
+		var (
+			dbName string
+		)
+
+		BeforeEach(func() {
+			var err error
+			err, dbName = creator.CreateDb()
+			Expect(err).ToNot(HaveOccurred())
+		})
+
 		It("Doesn't return an error", func() {
-			err, _, _ := creator.CreateUser("database")
+			err, _, _ := creator.CreateUser(dbName)
 			Expect(err).ToNot(HaveOccurred())
 		})
 
@@ -39,6 +51,17 @@ var _ = Describe("Database Service", func() {
 			_, username, password := creator.CreateUser("database")
 			Expect(username).ToNot(BeNil())
 			Expect(password).ToNot(BeNil())
+		})
+
+		Context("when the database doesn't exists", func() {
+			BeforeEach(func() {
+				dbName = "doesnt_exist"
+			})
+
+			It("returns an error", func() {
+				err, _, _ := creator.CreateUser(dbName)
+				Expect(err).To(MatchError(errors.New("DB does not exist")))
+			})
 		})
 	})
 
