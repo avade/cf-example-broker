@@ -1,6 +1,9 @@
 {
 	"ImportPath": "github.com/avade/cf-example-broker",
 	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/gorilla/context",
@@ -27,6 +30,10 @@
 		{
 			"ImportPath": "github.com/pivotal-golang/lager",
 			"Rev": "bb90e0a5276fefdf701cc5f145185bd62184f749"
+		},
+		{
+			"ImportPath": "github.com/satori/go.uuid",
+			"Rev": "08f0718b61e95ddba0ade3346725fe0e4bf28ca6"
 		}
 	]
 }

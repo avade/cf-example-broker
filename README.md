@@ -38,7 +38,7 @@ The broker is now running on `http://localhost:3000`
 
 
 - Setup [ginkgo](https://onsi.github.io/ginkgo/#getting-ginkgo)
-- `ginkgo`
+- `ginkgo -r`
 
 ## Libaries
 
