@@ -45,6 +45,7 @@ var _ = Describe("CfExampleBroker", func() {
 			var request *http.Request
 			request, err = http.NewRequest("PUT", path, buffer)
 			Expect(err).NotTo(HaveOccurred())
+
 			request.Header.Add("Content-Type", "application/json")
 			request.SetBasicAuth("username", "password")
 
