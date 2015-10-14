@@ -8,7 +8,7 @@ Use the projects tags to jump through milestones of the development.
 
 ## Running the Broker
 
-### Configuration
+### Configuration (not implemented)
 
 First update the configuration file. 
 
