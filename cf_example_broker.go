@@ -4,11 +4,16 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/avade/cf-example-broker/database"
+
 	"github.com/pivotal-cf/brokerapi"
 	"github.com/pivotal-golang/lager"
 )
 
-type exampleServiceBroker struct{}
+type exampleServiceBroker struct {
+	dbCreator database.Creator
+	instances map[string]string
+}
 
 func (*exampleServiceBroker) Services() []brokerapi.Service {
 	return nil
@@ -16,6 +21,8 @@ func (*exampleServiceBroker) Services() []brokerapi.Service {
 
 func (serviceBroker *exampleServiceBroker) Provision(instanceID string, details brokerapi.ProvisionDetails) error {
 	if details.PlanID == serviceBroker.plan().ID {
+		_, dbName := serviceBroker.dbCreator.CreateDb()
+		serviceBroker.instances[instanceID] = dbName
 		return nil
 	} else {
 		return errors.New("plan_id is not valid")
@@ -27,10 +34,16 @@ func (*exampleServiceBroker) Deprovision(instanceID string) error {
 	// Deprovision instances here
 }
 
-func (*exampleServiceBroker) Bind(instanceID, bindingID string, details brokerapi.BindDetails) (interface{}, error) {
-	return nil, errors.New("Not supported")
-	// Bind to instances here
-	// Return credentials which will be marshalled to JSON
+func (serviceBroker *exampleServiceBroker) Bind(instanceID, bindingID string, details brokerapi.BindDetails) (interface{}, error) {
+	err, username, password := serviceBroker.dbCreator.CreateUser(serviceBroker.instances[instanceID])
+	if err != nil {
+		return nil, err
+	}
+	credentialsMap := map[string]interface{}{
+		"username": username,
+		"password": password,
+	}
+	return credentialsMap, nil
 }
 
 func (*exampleServiceBroker) Unbind(instanceID, bindingID string) error {
@@ -39,7 +52,12 @@ func (*exampleServiceBroker) Unbind(instanceID, bindingID string) error {
 }
 
 func main() {
-	serviceBroker := &exampleServiceBroker{}
+	dbCreator := database.NewCreator("username", "password", "hostname", 123)
+
+	serviceBroker := &exampleServiceBroker{
+		dbCreator: dbCreator,
+		instances: map[string]string{},
+	}
 	logger := lager.NewLogger("cf-example-broker")
 	credentials := brokerapi.BrokerCredentials{
 		Username: "username",
